@@ -8,6 +8,7 @@ import '../services/recipe_service.dart';
 import '../model/recipe_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:foodly_mobile_frontend/services/route_observer.dart';
 
 class HomePage extends StatefulWidget {
   final LikeProvider likeProvider;
@@ -17,12 +18,18 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with RouteAware {
   final RecipeService recipeService = RecipeService();
   List<Recipe> top5 = [];
   bool _isLoading = true;
   int _currentUserId = 0;
-  User user = User(id: -1, name: '', email: '', createdAt: DateTime.now(), updatedAt: DateTime.now());
+  User user = User(
+    id: -1,
+    name: '',
+    email: '',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 
   @override
   void initState() {
@@ -30,6 +37,33 @@ class _HomePageState extends State<HomePage> {
     _loadUserId();
     fetchRecipeTop5();
     getTheUser();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    await _loadUserId();
+    await getTheUser();
+    await fetchRecipeTop5();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   // didPopNext() DIHAPUS — tidak valid di State biasa,

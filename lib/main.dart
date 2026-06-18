@@ -8,6 +8,7 @@ import 'package:foodly_mobile_frontend/screens/login_screen.dart';
 import 'package:foodly_mobile_frontend/features/recipescreen/pages/create_recipe_page.dart';
 import 'package:foodly_mobile_frontend/features/favoritscreen/pages/favorit_page.dart';
 import 'package:foodly_mobile_frontend/features/homescreen/providers/like_provider.dart';
+import 'package:foodly_mobile_frontend/services/route_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorObservers: [routeObserver],
       title: 'Foodly',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
