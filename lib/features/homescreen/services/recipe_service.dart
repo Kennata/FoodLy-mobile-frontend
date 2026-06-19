@@ -19,7 +19,7 @@ class RecipeService {
 
   Future<List<Recipe>> getLatestRecipes() async {
     final response = await http.get(
-      Uri.parse('https://foodly-backend-5mci.onrender.com/api/recipes/latest'),
+      Uri.parse('https://foodly-backend-5mci.onrender.com/api/recipes'),
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> result = jsonDecode(response.body);
